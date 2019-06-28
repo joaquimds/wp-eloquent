@@ -1,0 +1,25 @@
+.to-top {
+  height: 40px;
+  width: 40px;
+  font-size: 40px;
+  line-height: 36px;
+  cursor: pointer;
+  text-align: center;
+  z-index: 2;
+  position: fixed;
+  opacity: 0.4;
+  border-radius: 2px;
+  right: 15px;
+  //using opacity to fade in didn't work on iPhone
+  //so transitioning from transparent to coloured instead
+  color: transparent;
+  background: transparent;
+  bottom: -40px;
+  @include default-transition();
+
+  &--visible {
+    color: white;
+    background: black;
+    bottom: 15px;
+  }
+}

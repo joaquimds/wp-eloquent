@@ -1,0 +1,38 @@
+# Application
+web/app/languages/*
+!web/app/languages/.gitkeep
+web/app/plugins/*
+!web/app/plugins/.gitkeep
+web/app/mu-plugins/*/
+web/app/upgrade
+web/app/uploads/*
+!web/app/uploads/.gitkeep
+web/app/themes/outlandish/public/*
+web/.htaccess
+
+# WordPress
+web/wp
+
+# Dotenv
+.env
+.env.*
+!.env.example
+!.env.example.docker
+
+# Composer
+vendor/*
+!vendor/.gitkeep
+
+# PhpStorm
+/.idea
+
+# VSCode
+.vscode
+.history
+
+# NPM
+/node_modules
+.npmrc
+
+reports/*
+!reports/.gitkeep

@@ -1,0 +1,391 @@
+{
+    "key": "group_5a8d57087fc79",
+    "title": "Footer",
+    "fields": [
+        {
+            "key": "field_59e8b4c7f2446",
+            "label": "Pre-Footer Calls To Action",
+            "name": "pre_footer",
+            "type": "repeater",
+            "instructions": "Add up to 2 calls to action to appear above the footer",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "collapsed": "",
+            "min": 0,
+            "max": 2,
+            "layout": "row",
+            "button_label": "Add Call To Action",
+            "sub_fields": [
+                {
+                    "key": "field_59e8b4d2f2447",
+                    "label": "Title",
+                    "name": "title",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "formatting": "html",
+                    "maxlength": ""
+                },
+                {
+                    "key": "field_59e8b4d6f2448",
+                    "label": "Content",
+                    "name": "content",
+                    "type": "textarea",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "placeholder": "",
+                    "maxlength": "",
+                    "rows": 4,
+                    "new_lines": "br"
+                },
+                {
+                    "key": "field_59e8b4e1f2449",
+                    "label": "Button URL",
+                    "name": "button_url",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "formatting": "html",
+                    "maxlength": ""
+                },
+                {
+                    "key": "field_59e8b4ecf244a",
+                    "label": "Button Label",
+                    "name": "button_label",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "formatting": "html",
+                    "maxlength": ""
+                }
+            ]
+        },
+        {
+            "key": "field_5a4678de625fa",
+            "label": "Footer Elements",
+            "name": "footer_elements",
+            "type": "flexible_content",
+            "instructions": "Add up to 4 elements to the footer",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "layouts": {
+                "5a8d5301173c0": {
+                    "key": "5a8d5301173c0",
+                    "name": "wysiwyg",
+                    "label": "Wysiwyg",
+                    "display": "row",
+                    "sub_fields": [
+                        {
+                            "key": "field_5a467edf52917",
+                            "label": "Title",
+                            "name": "title",
+                            "type": "text",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "",
+                            "placeholder": "",
+                            "prepend": "",
+                            "append": "",
+                            "formatting": "html",
+                            "maxlength": ""
+                        },
+                        {
+                            "key": "field_5a46790f62604",
+                            "label": "Content",
+                            "name": "content",
+                            "type": "wysiwyg",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "",
+                            "toolbar": "full",
+                            "media_upload": 1,
+                            "tabs": "all",
+                            "delay": 0
+                        }
+                    ],
+                    "min": "",
+                    "max": ""
+                },
+                "5a8d530120b66": {
+                    "key": "5a8d530120b66",
+                    "name": "social_media",
+                    "label": "Social Media",
+                    "display": "row",
+                    "sub_fields": [
+                        {
+                            "key": "field_5a467f105291a",
+                            "label": "Title",
+                            "name": "title",
+                            "type": "text",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "",
+                            "placeholder": "",
+                            "prepend": "",
+                            "append": "",
+                            "formatting": "html",
+                            "maxlength": ""
+                        },
+                        {
+                            "key": "field_5a467ef452919",
+                            "label": "Accounts",
+                            "name": "accounts",
+                            "type": "repeater",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "collapsed": "",
+                            "min": 0,
+                            "max": 0,
+                            "layout": "table",
+                            "button_label": "Add Social Media Account",
+                            "sub_fields": [
+                                {
+                                    "key": "field_5a467f2f5291b",
+                                    "label": "Type",
+                                    "name": "type",
+                                    "type": "select",
+                                    "instructions": "",
+                                    "required": 0,
+                                    "conditional_logic": 0,
+                                    "wrapper": {
+                                        "width": "",
+                                        "class": "",
+                                        "id": ""
+                                    },
+                                    "choices": {
+                                        "facebook": "Facebook",
+                                        "twitter": "Twitter",
+                                        "instagram": "Instagram",
+                                        "linkedin": "LinkedIn",
+                                        "youtube": "YouTube",
+                                        "github": "GitHub"
+                                    },
+                                    "default_value": [],
+                                    "allow_null": 0,
+                                    "multiple": 0,
+                                    "ui": 0,
+                                    "ajax": 0,
+                                    "placeholder": "",
+                                    "return_format": "value"
+                                },
+                                {
+                                    "key": "field_5a467f485291d",
+                                    "label": "Url",
+                                    "name": "url",
+                                    "type": "text",
+                                    "instructions": "",
+                                    "required": 0,
+                                    "conditional_logic": 0,
+                                    "wrapper": {
+                                        "width": "",
+                                        "class": "",
+                                        "id": ""
+                                    },
+                                    "default_value": "",
+                                    "placeholder": "",
+                                    "prepend": "",
+                                    "append": "",
+                                    "formatting": "html",
+                                    "maxlength": ""
+                                }
+                            ]
+                        }
+                    ],
+                    "min": "",
+                    "max": ""
+                },
+                "5a8d530137cce": {
+                    "key": "5a8d530137cce",
+                    "name": "gravity_form",
+                    "label": "Gravity Form",
+                    "display": "row",
+                    "sub_fields": [
+                        {
+                            "key": "field_5a467f845291f",
+                            "label": "Title",
+                            "name": "title",
+                            "type": "text",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "",
+                            "placeholder": "",
+                            "prepend": "",
+                            "append": "",
+                            "formatting": "html",
+                            "maxlength": ""
+                        },
+                        {
+                            "key": "field_5a7c510e74352",
+                            "label": "Form",
+                            "name": "gravity_form_id",
+                            "type": "forms",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "return_format": "id",
+                            "allow_null": 0,
+                            "multiple": 0
+                        }
+                    ],
+                    "min": "",
+                    "max": ""
+                },
+                "5a8d530140dbc": {
+                    "key": "5a8d530140dbc",
+                    "name": "footer_nav",
+                    "label": "Footer Nav Menu",
+                    "display": "row",
+                    "sub_fields": [
+                        {
+                            "key": "field_5a48ecc51236b",
+                            "label": "Title",
+                            "name": "title",
+                            "type": "text",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "",
+                            "placeholder": "",
+                            "prepend": "",
+                            "append": "",
+                            "formatting": "html",
+                            "maxlength": ""
+                        },
+                        {
+                            "key": "field_5c24d339a6f40",
+                            "label": "Menu",
+                            "name": "footer_menu--autofilled_options",
+                            "type": "select",
+                            "instructions": "Go to Appearance -> <a href=\"\/wp\/wp-admin\/nav-menus.php\" target=\"_blank\">Menus<\/a> to add or edit menus",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "choices": {},
+                            "default_value": [],
+                            "allow_null": 0,
+                            "multiple": 0,
+                            "ui": 0,
+                            "ajax": 0,
+                            "return_format": "value",
+                            "placeholder": ""
+                        }
+                    ],
+                    "min": "",
+                    "max": ""
+                }
+            },
+            "button_label": "Add Footer Element",
+            "min": 0,
+            "max": 4
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "options_page",
+                "operator": "==",
+                "value": "acf-options-footer"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": 1,
+    "description": "",
+    "modified": 1547027516
+}

@@ -1,0 +1,51 @@
+.banner {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+
+  &__images {
+    min-height: 50vh;
+
+    .banner--full & {
+      min-height: calc(100vh - #{$navbar-height-mobile});
+
+      @include navbar-breakpoint-up {
+        min-height: calc(100vh - #{$navbar-height});
+      }
+    }
+  }
+
+  &__image,
+  &__background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position-x: center;
+    background-position-y: top;
+  }
+
+  &__background {
+    background-color: $principal-color;
+  }
+
+  &__gradient {
+    height: 100%;
+    background-image: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.6));
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    padding: 2.5rem 0;
+    color: white;
+  }
+}

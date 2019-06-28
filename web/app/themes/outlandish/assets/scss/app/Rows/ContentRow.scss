@@ -1,0 +1,18 @@
+.content-row {
+  margin-bottom: 5rem;
+
+  &:first-of-type {
+    margin-top: 2.5rem;
+  }
+
+  &__title,
+  &__subtitle {
+    @include body-text;
+    margin-bottom: 2.5rem;
+  }
+
+  &__title,
+  &__buttons {
+    text-align: center;
+  }
+}

@@ -1,0 +1,88 @@
+version: '3.2'
+
+services:
+
+  db:
+    image: mysql:5.6.27
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
+    networks:
+      - database
+    restart: always
+
+  adminer:
+    depends_on:
+      - db
+    volumes:
+       - ./docker/adminer/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
+    image: adminer
+    environment:
+      ADMINER_DESIGN: 'pepa-linha'
+      VIRTUAL_HOST: db.wpstarter.local
+      VIRTUAL_PORT: 8080
+    networks:
+      - database
+      - proxy-tier
+    restart: always
+
+  maildev:
+    image: djfarrelly/maildev:1.0.0-rc2
+    command: bin/maildev --web 80 --smtp 25 --hide-extensions STARTTLS
+    environment:
+      - VIRTUAL_HOST=mail.wpstarter.local
+    networks:
+      - proxy-tier
+      - mail
+    restart: always
+
+  application:
+    depends_on:
+      - db
+      - maildev
+    image: outlandish/wordpress:latest
+    expose:
+      - 9000
+      - 9001
+    environment:
+      DBGP_IDEKEY: $XDEBUG_IDE_KEY
+    user: $UID
+    volumes:
+      - ./:/var/www/html
+    networks:
+      - mail
+      - database
+      - application
+    restart: always
+
+  web:
+    depends_on:
+      - application
+    image: nginx:latest
+    volumes:
+      - ./:/var/www/html
+      - ./docker/nginx/application.conf:/etc/nginx/conf.d/application.conf
+    environment:
+      - VIRTUAL_HOST=wpstarter.local
+    networks:
+      - proxy-tier
+      - application
+    restart: always
+
+  assets:
+    image: node:8
+    volumes:
+      - ./:/app
+    user: $UID
+    working_dir: /app
+    command: sh -c "npm i && node_modules/.bin/gulp watch"
+
+networks:
+  database:
+  mail:
+  application:
+  proxy-tier:
+    external:
+      name: reverse-proxy

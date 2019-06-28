@@ -1,0 +1,46 @@
+.wysiwyg {
+  &__content {
+    @include body-text;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+
+    &.alignleft {
+      float: left;
+      margin-right: 1rem;
+      margin-top: 0.5rem;
+    }
+
+    &.alignright {
+      float: right;
+      margin-left: 1rem;
+      margin-top: 0.5rem
+    }
+  }
+
+  .wp-caption-text {
+    font-size: 1rem;
+    color: $gray-600;
+    text-align: left;
+  }
+
+  /* Popout images */
+  @include media-breakpoint-up(lg) {
+    .popout {
+      width: 115%;
+      margin-left: -7.5%;
+      max-width: none;
+    }
+
+    /* Sometimes there are nested .popout elements
+       (e.g. when popout images have captions)
+       If so, we need to remove the .popout styling
+       from the child element */
+    .popout > .popout {
+      margin-left: 0;
+      max-width: 100%;
+    }
+  }
+}

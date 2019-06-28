@@ -1,0 +1,53 @@
+.footer {
+  padding: 1rem 0;
+  font-size: 0.875rem;
+
+  p {
+    margin-bottom: 0.5rem;
+  }
+
+  &__title,
+  &__element {
+    margin-bottom: 1rem;
+  }
+
+  &__nav {
+    list-style: none;
+    padding: 0;
+    text-decoration: none;
+
+    a {
+      color: inherit;
+    }
+  }
+
+  &__social {
+    display: inline-block;
+    font-size: 1.5rem;
+    margin-right: 0.5rem;
+    color: inherit;
+    text-decoration: none !important;
+  }
+
+  .gform_wrapper {
+    .gfield_label {
+      display: none;
+    }
+
+    input {
+      width: 100%;
+    }
+  }
+
+  // Improves the positioning of elements when there are fewer than four
+  &--center {
+    @include media-breakpoint-up(md) {
+      text-align: center;
+
+      .footer__element {
+        display: inline-block;
+        text-align: left;
+      }
+    }
+  }
+}

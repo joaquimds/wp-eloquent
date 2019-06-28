@@ -1,0 +1,8 @@
+---
+commands:
+  init:
+    description: runs init script from the node docker container
+    command: >
+      docker-compose -f docker-compose.yml -f build.yml run --rm npm npm i &&
+      docker-compose -f docker-compose.yml -f build.yml run --rm node node init.js --docker &&
+      docker-compose -f docker-compose.yml -f build.yml run --rm composer composer install

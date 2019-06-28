@@ -1,0 +1,79 @@
+@mixin default-transition($time: $default-transition-time, $property: all, $timing-function: ease-in-out) {
+  transition: $property $timing-function $time;
+}
+
+@mixin navbar-breakpoint-up() {
+  @include media-breakpoint-up($navbar-expand-breakpoint) {
+    @content;
+  }
+}
+
+@mixin supports-hover() {
+  @media (hover: hover) {
+    @content;
+  }
+}
+
+@mixin body-text() {
+  max-width: $body-text-max-width;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@mixin card-image($backgroundSize: cover) {
+  position: relative;
+  background-repeat: no-repeat;
+  background-position-x: center;
+  // always show the top of the image, for more predictable cropping behaviour
+  background-position-y: top;
+  background-size: $backgroundSize;
+  width: 100%;
+  padding-bottom: 67%;
+
+  // make them slightly squarer when there are four across
+  @include media-breakpoint-up(md) {
+    .col-md-3 & {
+      padding-bottom: 75%;
+    }
+  }
+
+  @include media-breakpoint-up(lg) {
+    .col-lg-3 & {
+      padding-bottom: 75%;
+    }
+  }
+}
+
+// Used to make an element full width when it's parent/container that isn't.
+// Note: The container must be centered.
+@mixin full-width() {
+  position: relative;
+  width: 100vw;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+}
+
+// Used to make an element's background full width, but not its content.
+// The element must have an empty child with the class
+// `$backgroundChildClass` e.g. `<div class="full-width-background"></div>`
+@mixin full-width-background($backgroundChildClass: '.full-width-background') {
+  position: relative;
+
+  #{$backgroundChildClass} {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 100vw;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+    z-index: -1;
+    overflow: hidden;
+
+    // background styles
+    @content;
+  }
+}

@@ -1,0 +1,289 @@
+---
+kind: Template
+apiVersion: v1
+metadata:
+  name: wp-starter
+
+#-----------------------------------------------------------------------------------------
+# configuration parameters
+
+parameters:
+- name: NAME
+  required: true
+- name: DOMAIN
+  required: true
+- name: DATABASE_PASSWORD
+  generate: expression
+  from: "[a-zA-Z0-9]{16}"
+
+objects:
+
+#-----------------------------------------------------------------------------------------
+# secrets, shhhhhhhhhhhhhhhhhhhh!
+
+- kind: Secret
+  apiVersion: v1
+  metadata:
+    name: "${NAME}"
+  stringData:
+    DATABASE_PASSWORD: "${DATABASE_PASSWORD}"
+
+#-----------------------------------------------------------------------------------------
+# nginx
+
+- kind: Route
+  apiVersion: v1
+  metadata:
+    name: "${NAME}"
+    annotations:
+      template.openshift.io/expose-uri: http://{.spec.host}{.spec.path}
+  spec:
+    host: "${DOMAIN}"
+    to:
+      kind: Service
+      name: "${NAME}-web"
+
+- kind: Service
+  apiVersion: v1
+  metadata:
+    name: "${NAME}-web"
+  spec:
+    ports:
+    - name: web
+      port: 8080
+      targetPort: 80
+    selector:
+      name: "${NAME}-web"
+
+- kind: ImageStream
+  apiVersion: v1
+  metadata:
+    name: "${NAME}-web"
+
+- kind: BuildConfig
+  apiVersion: v1
+  metadata:
+    name: "${NAME}-web"
+  spec:
+    source:
+      type: Binary
+    strategy:
+      type: Docker
+      dockerStrategy:
+        dockerfilePath: .ol/openshift/web/Dockerfile
+        env:
+        - name: APP_HOSTNAME
+          value: "${NAME}-app"
+    output:
+      to:
+        kind: ImageStreamTag
+        name: "${NAME}-web:latest"
+    triggers:
+    - type: ImageChange
+    - type: ConfigChange
+
+- kind: DeploymentConfig
+  apiVersion: v1
+  metadata:
+    name: "${NAME}-web"
+  spec:
+    strategy:
+      type: Recreate
+    triggers:
+    - type: ImageChange
+      imageChangeParams:
+        automatic: true
+        containerNames:
+        - web
+        from:
+          kind: ImageStreamTag
+          name: "${NAME}-web:latest"
+    - type: ConfigChange
+    replicas: 1
+    selector:
+      name: "${NAME}-web"
+    template:
+      metadata:
+        name: "${NAME}-web"
+        labels:
+          name: "${NAME}-web"
+      spec:
+        containers:
+        - name: web
+          image: " "
+          ports:
+          - containerPort: 80
+          readinessProbe:
+            timeoutSeconds: 3
+            initialDelaySeconds: 3
+            tcpSocket:
+              port: 80
+          livenessProbe:
+            timeoutSeconds: 3
+            initialDelaySeconds: 30
+            tcpSocket:
+              port: 80
+
+#-----------------------------------------------------------------------------------------
+# php app
+
+- kind: Service
+  apiVersion: v1
+  metadata:
+    name: "${NAME}-app"
+  spec:
+    ports:
+    - name: app
+      port: 9000
+      targetPort: 9000
+    selector:
+      name: "${NAME}-app"
+
+- kind: ImageStream
+  apiVersion: v1
+  metadata:
+    name: "${NAME}-app"
+
+- kind: BuildConfig
+  apiVersion: v1
+  metadata:
+    name: "${NAME}-app"
+  spec:
+    source:
+      type: Binary
+    strategy:
+      type: Docker
+      dockerStrategy:
+        dockerfilePath: .ol/openshift/app/Dockerfile
+    output:
+      to:
+        kind: ImageStreamTag
+        name: "${NAME}-app:latest"
+    triggers:
+    - type: ImageChange
+    - type: ConfigChange
+
+- kind: DeploymentConfig
+  apiVersion: v1
+  metadata:
+    name: "${NAME}-app"
+  spec:
+    strategy:
+      type: Recreate
+    triggers:
+    - type: ImageChange
+      imageChangeParams:
+        automatic: true
+        containerNames:
+        - app
+        from:
+          kind: ImageStreamTag
+          name: "${NAME}-app:latest"
+    - type: ConfigChange
+    replicas: 1
+    selector:
+      name: "${NAME}-app"
+    template:
+      metadata:
+        name: "${NAME}-app"
+        labels:
+          name: "${NAME}-app"
+      spec:
+        containers:
+        - name: app
+          image: " "
+          ports:
+          - containerPort: 9000
+          env:
+
+          # wordpress environment
+          #----------------------------
+
+          - name: WP_ENV
+            value: production
+          - name: WP_HOME
+            value: "http://${DOMAIN}"
+          - name: WP_SITEURL
+            value: "http://${DOMAIN}/wp"
+
+          #   wordpress database
+
+          - name: DB_NAME
+            value: wordpress
+          - name: DB_USER
+            value: wordpress
+          - name: DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: "${NAME}"
+                key: DATABASE_PASSWORD
+          - name: DB_HOST
+            value: "${NAME}-db"
+
+#-----------------------------------------------------------------------------------------
+# ephemeral mysql database
+
+- kind: ConfigMap
+  apiVersion: v1
+  metadata:
+    name: "${NAME}-mysql-init"
+
+- kind: Service
+  apiVersion: v1
+  metadata:
+    name: "${NAME}-db"
+    annotations:
+      description: Exposes the database server
+  spec:
+    ports:
+    - name: mysql
+      port: 3306
+      targetPort: 3306
+    selector:
+      name: "${NAME}-db"
+
+- kind: DeploymentConfig
+  apiVersion: v1
+  metadata:
+    name: "${NAME}-db"
+    annotations:
+      description: Defines how to deploy the database
+  spec:
+    strategy:
+      type: Recreate
+    triggers:
+    - type: ConfigChange
+    replicas: 1
+    selector:
+      name: "${NAME}-db"
+    template:
+      metadata:
+        name: "${NAME}-db"
+        labels:
+          name: "${NAME}-db"
+      spec:
+        containers:
+        - name: mysql
+          image: outlandish/mysql:5.6-minimal
+          ports:
+          - containerPort: 3306
+          env:
+          - name: MYSQL_DATABASE
+            value: wordpress
+          - name: MYSQL_USER
+            value: wordpress
+          - name: MYSQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: "${NAME}"
+                key: DATABASE_PASSWORD
+          - name: MYSQL_RANDOM_ROOT_PASSWORD
+            value: yes-please-that-would-be-nice
+          volumeMounts:
+            - name: mysql-init
+              mountPath: /docker-entrypoint-initdb.d
+        volumes:
+        - name: mysql-init
+          configMap:
+            name: "${NAME}-mysql-init"
+

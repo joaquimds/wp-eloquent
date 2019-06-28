@@ -1,0 +1,152 @@
+---
+stages:
+- deploy:setup
+- deploy
+- cleanup
+
+##########################
+#   OpenShift Settings   #
+##########################
+
+# Sadly here we can't build APP/DOMAIN variables from other environment variables
+# Otherwise we would do something like:
+#
+#   APP: $CI_COMMIT_REF_NAME
+#   DOMAIN: $KUBE_NAMESPACE.staging.openshift.out.re
+#
+# See https://gitlab.com/gitlab-org/gitlab-runner/issues/1809
+
+.oc: &oc
+  <<: *defaults
+  image: outlandish/oc:3.6
+  before_script:
+  - oc login "$KUBE_URL" --token="$KUBE_TOKEN"
+  - oc project "$KUBE_NAMESPACE" 2> /dev/null || oc new-project "$KUBE_NAMESPACE"
+
+.openshift-review-filter: &openshift-review-filter
+  only:
+  # update-openshift is our "master" for now update-openshift-review-* is review
+  - /review.*/
+
+.openshift-deploy-filter: &openshift-deploy-filter
+  only:
+  - master
+
+.openshift-review-variables: &openshift-review-variables
+  DOMAIN: $CI_COMMIT_REF_NAME.$KUBE_NAMESPACE.staging.openshift.out.re
+
+.openshift-review-environment: &openshift-review-environment
+  name: review/$CI_COMMIT_REF_NAME
+  url: http://$CI_COMMIT_REF_NAME.$KUBE_NAMESPACE.staging.openshift.out.re
+
+.openshift-deploy-variables: &openshift-deploy-variables
+  DOMAIN: $KUBE_NAMESPACE.staging.openshift.out.re
+
+.openshift-deploy-environment: &openshift-deploy-environment
+  name: $CI_COMMIT_REF_NAME
+  url: http://$KUBE_NAMESPACE.staging.openshift.out.re
+
+.openshift-setup: &openshift-setup
+  <<: *oc
+  stage: deploy:setup
+  dependencies: []
+  script:
+  - oc adm policy add-role-to-group admin system:authenticated:oauth
+  - >
+    git log -1 --pretty=%B | grep -F '[oc-delete]' &>/dev/null &&
+    oc delete all,secrets,configmaps,pvc -l app="$CI_COMMIT_REF_NAME"
+  - >
+    oc get route "$CI_COMMIT_REF_NAME" &>/dev/null && echo "Using previous deployment" ||
+    (oc process -f .ol/openshift/template.yaml
+    -l app="$CI_COMMIT_REF_NAME"
+    -p NAME="$CI_COMMIT_REF_NAME"
+    -p DOMAIN="$DOMAIN" | oc create -f -)
+  - echo "creating mysql-init configmap"
+  - >
+    oc create configmap "${CI_COMMIT_REF_NAME}-mysql-init"
+    --from-file=data/ --dry-run -o yaml | oc replace -f -
+  - oc label configmap "${CI_COMMIT_REF_NAME}-mysql-init" --overwrite app="$CI_COMMIT_REF_NAME"
+
+.openshift-deploy-app: &openshift-deploy-app
+  <<: *oc
+  stage: deploy
+  variables:
+    GIT_STRATEGY: none
+  dependencies:
+  - build:php
+  script:
+  - oc start-build "$CI_COMMIT_REF_NAME-app" --from-dir=. --follow
+
+.openshift-deploy-web: &openshift-deploy-web
+  <<: *oc
+  stage: deploy
+  variables:
+    GIT_STRATEGY: none
+  dependencies:
+  - build:php
+  - build:assets
+  script:
+  - oc start-build "$CI_COMMIT_REF_NAME-web" --from-dir=. --follow
+
+openshift:review:setup:
+  <<: *openshift-setup
+  <<: *openshift-review-filter
+  variables:
+    <<: *openshift-review-variables
+  environment:
+    <<: *openshift-review-environment
+
+openshift:review:app:
+  <<: *openshift-deploy-app
+  <<: *openshift-review-filter
+  variables:
+    <<: *openshift-review-variables
+  environment:
+    <<: *openshift-review-environment
+
+openshift:review:web:
+  <<: *openshift-deploy-web
+  <<: *openshift-review-filter
+  stage: deploy
+  variables:
+    GIT_STRATEGY: none
+    <<: *openshift-review-variables
+  environment:
+    <<: *openshift-review-environment
+    on_stop: openshift:stop-review
+
+openshift:stop-review:
+  <<: *oc
+  <<: *openshift-review-filter
+  stage: cleanup
+  script:
+  - oc delete all,pvc,secret,configmaps -l app=$CI_COMMIT_REF_NAME
+  when: manual
+  environment:
+    <<: *openshift-review-environment
+    action: stop
+
+openshift:deploy:setup:
+  <<: *openshift-setup
+  <<: *openshift-deploy-filter
+  variables:
+    <<: *openshift-deploy-variables
+  environment:
+    <<: *openshift-deploy-environment
+
+openshift:deploy:app:
+  <<: *openshift-deploy-app
+  <<: *openshift-deploy-filter
+  variables:
+    <<: *openshift-deploy-variables
+  environment:
+    <<: *openshift-deploy-environment
+
+openshift:deploy:web:
+  <<: *openshift-deploy-web
+  <<: *openshift-deploy-filter
+  variables:
+    GIT_STRATEGY: none
+    <<: *openshift-deploy-variables
+  environment:
+    <<: *openshift-deploy-environment

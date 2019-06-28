@@ -1,0 +1,9 @@
+.image-row {
+  &__image {
+    @include card-image(contain);
+
+    &--cover {
+      background-size: cover;
+    }
+  }
+}

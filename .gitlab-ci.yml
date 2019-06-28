@@ -1,0 +1,150 @@
+stages:
+  - build
+  - test
+  - danger
+  - release
+  - deploy:setup
+  - deploy
+  - cleanup
+
+services:
+  - name: mysql:5.7
+    alias: database
+
+variables:
+  MYSQL_DATABASE: wordpress
+  MYSQL_ROOT_PASSWORD: wordpress
+  DB_HOST: database
+  DB_NAME: wordpress
+  DB_USER: root
+  DB_PASSWORD: wordpress
+  WP_HOME: http://localhost
+  WP_SITEURL: http://localhost/wp
+
+.defaults: &defaults
+  tags:
+    - docker
+
+.php: &php
+  <<: *defaults
+  image: outlandish/wordpress-tools
+  cache:
+    key: vendor
+    paths:
+      - vendor
+      - web/app/plugins
+      - web/app/mu-plugins
+      - ~/.cache/composer
+
+.test: &test
+  stage: test
+
+.test:php: &test_php
+  <<: *test
+  <<: *php
+  dependencies:
+    - build:php
+  before_script:
+    - composer install
+    - cp .env.example .env
+    - wp --allow-root core install --url=${WP_HOME} --title=Example --admin_user=admin --admin_password=admin --admin_email=admin@outlandish.com
+
+#######################################
+#    Build for Ansible and OpenShift  #
+#######################################
+
+build:php:
+  <<: *php
+  stage: build
+  script:
+    - composer install --no-dev
+  artifacts:
+    paths:
+      - vendor
+      - web/wp
+      - web/app/plugins
+      - web/app/mu-plugins
+    expire_in: 1 hour
+
+build:assets:
+  <<: *defaults
+  image: node:8
+  stage: build
+  script:
+    - npm config set @fortawesome:registry https://npm.fontawesome.com/
+    - npm config set //npm.fontawesome.com/:_authToken ${FONT_AWESOME_NPM_TOKEN}
+    - npm i
+    - npm run build
+    - rm -rf ./node_modules
+  cache:
+    key: node_modules
+    paths:
+      - node_modules
+  artifacts:
+    paths:
+      - web/app/themes/outlandish/public
+    expire_in: 1 hour
+
+##########################
+#          Test          #
+##########################
+
+test:wordpress_version:
+  <<: *test_php
+  script:
+    - wp --allow-root core check-update --format=json > reports/wp_version.json
+    - wp --allow-root plugin list --fields=name,status,update,version,update_version --format=json > reports/wp_plugin_versions.json
+  artifacts:
+    paths:
+      - reports
+    expire_in: 1 hour
+
+##########################
+#     Release for S3     #
+##########################
+
+release:
+  dependencies:
+    - build:php
+    - build:assets
+  image: waffleau/docker-aws
+  stage: release
+  tags:
+    - docker
+  script:
+    - tar -czf wpstarter.tar.gz *
+    - aws s3 cp ./wpstarter.tar.gz s3://gitlab-job-releases/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}/${CI_COMMIT_REF_NAME}.tar.gz
+
+
+##########################
+#  Artifact for Ansible  #
+##########################
+
+.artifacts: &artifacts
+  <<: *defaults
+  dependencies:
+    - build:php
+    - build:assets
+  image: php:7-alpine
+  stage: release
+  script:
+    - rm -rf .git node_modules
+
+deploy:master:
+  <<: *artifacts
+  only:
+    - master
+  artifacts:
+    paths:
+      - ./
+    expire_in: 1 day
+
+deploy:tag:
+  <<: *artifacts
+  only:
+    - tags
+  artifacts:
+    paths:
+      - ./
+    expire_in: 1 week
+

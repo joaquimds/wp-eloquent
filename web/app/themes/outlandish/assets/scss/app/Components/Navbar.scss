@@ -1,0 +1,154 @@
+// .navbar-container should be the same height as .navbar in order to push
+// content down the page when .navbar is fixed
+// (min-height is used so as not to break the collapsing mobile nav)
+.navbar-container,
+.navbar {
+  min-height: $navbar-height-mobile;
+
+  @include navbar-breakpoint-up {
+    min-height: $navbar-height;
+  }
+}
+
+.navbar {
+  // Extending this class, rather than simply adding it to the element,
+  // in order to use a variable which can also be used by the
+  // navbar-breakpoint-up mixin
+  @extend .navbar-expand-#{$navbar-expand-breakpoint};
+
+  background: white;
+  font-size: 1rem;
+  box-shadow: 0 0 10px rgba($gray-700, 0.3);
+}
+
+.navbar-brand {
+  font-size: 2rem;
+  padding: 0;
+  line-height: $navbar-height-mobile;
+
+  @include navbar-breakpoint-up {
+    line-height: $navbar-height;
+  }
+
+  &,
+  &:hover,
+  &:focus,
+  &:visited,
+  &:active {
+    color: inherit;
+  }
+
+  &__image {
+    display: block;
+    width: auto;
+    height: $navbar-height-mobile;
+    padding: 0.5rem 0;
+
+    @include navbar-breakpoint-up {
+      height: $navbar-height;
+      padding: 0.75rem 0;
+    }
+  }
+}
+
+.navbar {
+  .menu-item {
+    // Apply relevant Bootstrap styles to WordPress menu classes
+    @extend .nav-item;
+
+    a {
+      @extend .nav-link;
+
+      color: inherit;
+
+      @include supports-hover {
+        &:active,
+        &:focus,
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+
+    &.current-menu-item,
+    &.current-post-parent {
+      color: $principal-color;
+    }
+  }
+}
+
+.navbar-toggler {
+  padding: 0;
+
+  &:active,
+  &:focus,
+  &:hover {
+    outline: 0;
+  }
+}
+
+/* Toggle button icon with animation */
+.icon-bar {
+  @include default-transition(0.2s);
+
+  display: block;
+  width: 20px;
+  height: 3px;
+  border-radius: 1px;
+  background-color: $body-color;
+  transform-origin: left center;
+
+  .collapsed & {
+    opacity: 1;
+    width: 25px;
+    transform: rotate(0);
+  }
+
+  &--top {
+    transform: rotate(45deg);
+    top: -3px;
+    left: 8px;
+    margin-bottom: 4px;
+  }
+
+  &--middle {
+    width: 0;
+    opacity: 0;
+    margin-bottom: 4px;
+  }
+
+  &--bottom {
+    transform: rotate(-45deg);
+    top: 39px;
+    left: 8px;
+  }
+}
+
+/* Move the fixed navbar down when the WP admin bar is present */
+.wp-admin-bar {
+  .navbar.fixed-top {
+    top: 32px;
+
+    @media screen and (max-width: 782px) {
+      top: 46px;
+    }
+  }
+}
+
+/* Ensure the WP admin bar remains fixed on mobile, otherwise it
+   looks weird when combined with a fixed navbar */
+#wpadminbar {
+  position: fixed;
+}
+
+/* A little JS adds .js-hide-nav when scrolling down the page,
+   and removes it when scrolling up */
+@include media-breakpoint-down(sm) {
+  .navbar.fixed-top {
+    @include default-transition();
+
+    &.js-hide-nav {
+      top: -$navbar-height-mobile;
+    }
+  }
+}

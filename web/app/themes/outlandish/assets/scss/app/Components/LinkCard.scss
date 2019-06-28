@@ -1,0 +1,38 @@
+.link-card {
+  text-decoration: none;
+  color: inherit;
+  font-size: 1rem;
+
+  &:hover, &:focus, &:active {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  &__image {
+    @include card-image();
+
+    .link-card--no-image & {
+      background-color: $principal-color;
+    }
+
+    margin-bottom: 0.75rem;
+  }
+
+  &__title {
+    a:hover &,
+    a:active &,
+    a:focus & {
+      text-decoration: underline;
+    }
+  }
+
+  &__label {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.875rem;
+    background-color: $principal-color;
+    color: white;
+  }
+}

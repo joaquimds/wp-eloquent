@@ -1,0 +1,30 @@
+.cta {
+  $cta-background-1: #F0FCFD;
+  $cta-background-2: #E7E9ED;
+  display: flex;
+  position: relative;
+  justify-content: center;
+  text-align: center;
+  background-color: $cta-background-1;
+
+  &:nth-of-type(even) {
+    background-color: $cta-background-2;
+  }
+
+  &__body {
+    max-width: $body-text-max-width;
+    margin: 3rem 4rem;
+
+    @include media-breakpoint-up(sm) {
+      margin: 4rem 6rem;
+    }
+  }
+
+  &__title {
+    margin-bottom: 1.5rem;
+  }
+
+  &__content {
+    margin-bottom: 2rem;
+  }
+}

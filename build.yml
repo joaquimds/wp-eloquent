@@ -1,0 +1,106 @@
+---
+version: '3.2'
+
+services:
+
+  wp:
+    depends_on:
+      - db
+    extends:
+      service: base
+      file: build.yml
+
+  composer:
+    depends_on:
+      - db
+    image: outlandish/wordpress:latest
+    user: $UID
+    volumes:
+      - ./:/var/www/html
+      - ./docker/composer:/.composer
+    environment:
+      - PHP_IDE_CONFIG="serverName=wpe.local"
+    command: php -a
+    networks:
+      - database
+      - mail
+
+  phpcbf:
+    depends_on:
+      - db
+    image: outlandish/wordpress:latest
+    user: $UID
+    volumes:
+      - ./:/var/www/html
+    environment:
+      - PHP_IDE_CONFIG="serverName=wpstarter.local"
+    command: php -a
+    networks:
+      - database
+      - mail
+
+  phpcs:
+    depends_on:
+      - db
+    image: outlandish/wordpress:latest
+    user: $UID
+    volumes:
+      - ./:/var/www/html
+    environment:
+      - PHP_IDE_CONFIG="serverName=wpstarter.local"
+    command: php -a
+    networks:
+      - database
+      - mail
+
+  phpunit:
+    depends_on:
+      - db
+    image: outlandish/wordpress:latest
+    user: $UID
+    volumes:
+      - ./:/var/www/html
+    environment:
+      - PHP_IDE_CONFIG="serverName=wpstarter.local"
+    command: php -a
+    networks:
+      - database
+      - mail
+
+  php:
+    depends_on:
+      - db
+    image: outlandish/wordpress:latest
+    user: $UID
+    volumes:
+      - ./:/var/www/html
+    environment:
+      - PHP_IDE_CONFIG="serverName=wpstarter.local"
+    command: php -a
+    networks:
+      - database
+      - mail
+
+  npm:
+    depends_on:
+      - db
+    image: node:8
+    user: $UID
+    volumes:
+      - ./:/app
+    working_dir: /app
+    networks:
+      - database
+      - mail
+
+  node:
+    depends_on:
+      - db
+    image: node:8
+    user: $UID
+    volumes:
+      - ./:/app
+    working_dir: /app
+    networks:
+      - database
+      - mail

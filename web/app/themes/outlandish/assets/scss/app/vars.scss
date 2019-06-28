@@ -1,0 +1,16 @@
+/* Collect variables that are used across different
+   components/rows/pages etc. in this file */
+
+/* COLOURS */
+$principal-color: #337ab7;
+
+/* LAYOUT */
+$navbar-height: 70px;
+$navbar-height-mobile: 56px;
+// The point at which the navbar will expand i.e. un-collapse
+$navbar-expand-breakpoint: lg;
+$container-max-width: 1280px;
+$body-text-max-width: 770px;
+
+/* OTHER */
+$default-transition-time: 0.2s;

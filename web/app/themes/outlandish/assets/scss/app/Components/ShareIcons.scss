@@ -1,0 +1,85 @@
+$icon-size: 2rem;
+
+.js-sticky-share-container {
+  position: relative;
+}
+
+.share {
+  font-size: 0;
+  height: $icon-size;
+
+  &__icon {
+    display: inline-block;
+    line-height: $icon-size;
+    width: $icon-size;
+    border-radius: 50%;
+    background-color: $body-color;
+    font-size: $icon-size/2;
+    text-align: center;
+    text-decoration: none;
+    color: white;
+    margin: 0 $icon-size/2 $icon-size/2 0;
+
+    &:hover,
+    &:focus,
+    &:active {
+      text-decoration: none;
+      color: white;
+    }
+
+    @media (hover: hover) {
+      &:hover,
+      &:active {
+        background-color: $principal-color;
+      }
+    }
+
+    &--print {
+      cursor: pointer;
+      color: white;
+    }
+  }
+
+  &--top {
+    margin-top: 2.5rem;
+  }
+
+  &--bottom {
+    margin-bottom: 5rem;
+  }
+
+  &--top,
+  &--bottom {
+    // line them up with wysiwyg rows etc.
+    @include body-text();
+  }
+
+  &--sticky {
+    display: none;
+  }
+
+  &--top,
+  &--bottom {
+    display: block;
+  }
+
+  @include media-breakpoint-up(lg) {
+    &--sticky {
+      display: block;
+      // stack icons on top of each other
+      width: $icon-size;
+      height: auto;
+      // push it down slightly, so it lines up
+      // with the top of the wysiwyg content better
+      margin: 0.5rem 0 0 0;
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+
+    &--top,
+    &--bottom {
+      display: none;
+    }
+  }
+}

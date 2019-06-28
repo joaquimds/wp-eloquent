@@ -1,0 +1,45 @@
+.cookie-banner {
+  display: none; // displayed/hidden with JS
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  background: rgba(18,18,20,0.95);
+  z-index: 3;
+  width: 100%;
+  padding: 1.5rem;
+  color: white;
+
+  &__message {
+    position: relative;
+    margin: 1rem auto;
+    max-width: $body-text-max-width;
+    padding-right: 40px; // leave space for the close button
+
+    @include media-breakpoint-up(sm) {
+      padding-right: 80px;
+    }
+
+    a {
+      font-weight: bold;
+      color: inherit;
+    }
+  }
+
+  &__button {
+    color: inherit;
+    position: absolute;
+    right: 0;
+    top: 0;
+    font-size: 2rem;
+    background: none;
+    border: 0;
+    padding: 0;
+    outline: 0;
+    line-height: 1.5rem;
+
+    &:hover,
+    &:focus {
+      outline: none;
+    }
+  }
+}

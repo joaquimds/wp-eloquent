@@ -1,0 +1,9 @@
+.cta-row {
+  @include media-breakpoint-up(md) {
+    display: flex;
+
+    .cta {
+      flex: 1;
+    }
+  }
+}

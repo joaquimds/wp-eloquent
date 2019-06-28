@@ -1,0 +1,5 @@
+state: site
+settings:
+  title: Outlandish WordPress Starter
+  active_theme: outlandish
+  permalink_structure: '/%postname%/'

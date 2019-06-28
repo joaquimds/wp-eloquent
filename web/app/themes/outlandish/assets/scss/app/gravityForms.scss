@@ -1,0 +1,74 @@
+/* Apply Bootstrap styles to Gravity Forms elements */
+
+.gform_wrapper {
+  form {
+    margin-bottom: 0;
+  }
+
+  ul {
+    @extend .list-unstyled;
+  }
+
+  li {
+    @extend .form-group;
+  }
+
+  .gfield_required {
+    padding-left: 1px;
+    color: $danger;
+  }
+
+  input[type="email"],
+  input[type="date"],
+  input[type="datetime"],
+  input[type="datetime-local"],
+  input[type="month"],
+  input[type="number"],
+  input[type="password"],
+  input[type="search"],
+  input[type="tel"],
+  input[type="text"],
+  input[type="time"],
+  input[type="week"],
+  input[type="url"],
+  select,
+  textarea {
+    @extend .form-control;
+  }
+
+  .button {
+    @extend .btn;
+    @extend .btn-primary;
+  }
+
+  .validation_error {
+    @extend .alert;
+    @extend .alert-danger;
+  }
+
+  .validation_message {
+    @extend .invalid-feedback;
+    display: block;
+  }
+
+  /* The default spinner has been replaced using the
+  gform_ajax_spinner_url hook, & this is needed to
+  animate the replacement */
+  .gform_ajax_spinner {
+    display: block;
+    margin: 1rem auto;
+    width: 2rem;
+    height: 2rem;
+    animation: spinner 1.1s infinite linear;
+  }
+
+  @keyframes spinner {
+    0% {
+      transform: rotate(0deg);
+    }
+
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+}

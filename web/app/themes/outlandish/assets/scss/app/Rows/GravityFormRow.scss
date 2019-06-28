@@ -1,0 +1,26 @@
+.gform-row {
+  &__body {
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  // Applies when you use the 'name' field with only first name and last name inputs
+  // (e.g. with the default contact form that's set up if you import minimal.sql)
+  .no_prefix.has_first_name.no_middle_name.has_last_name.no_suffix {
+    .name_first,
+    .name_last {
+      float: left;
+      width: 50%;
+      margin-bottom: 1rem;
+    }
+
+    .name_first {
+      padding-right: 0.5rem;
+    }
+
+    .name_last {
+      padding-left: 0.5rem;
+    }
+  }
+}

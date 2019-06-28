@@ -1,0 +1,36 @@
+.btn {
+  background: transparent;
+  text-decoration: none;
+  color: $principal-color;
+  border: 1px solid $principal-color;
+  min-width: 6rem;
+  @include default-transition();
+
+  &:focus {
+    color: inherit;
+  }
+
+  &:hover,
+  &:active {
+    background: $principal-color;
+    color: white;
+    text-decoration: none;
+  }
+
+  &--light {
+    color: white;
+    border-color: white;
+
+    &:hover,
+    &:active {
+      background: white;
+      color: $body-color;
+    }
+  }
+
+}
+
+.btn,
+button {
+  cursor: pointer;
+}
