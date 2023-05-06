@@ -33,7 +33,7 @@
     "inquirer": "^5.2.0",
     "jquery": "^3.4.1",
     "js-cookie": "^2.2.0",
-    "lint-staged": "^8.1.5",
+    "lint-staged": "^13.2.2",
     "merge-stream": "^1.0.1",
     "mini-css-extract-plugin": "^0.5.0",
     "mysql": "^2.16.0",
